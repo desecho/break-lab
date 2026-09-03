@@ -7,8 +7,10 @@ import { InstancedCrateTarget } from "./InstancedCrateTarget";
 
 class FakePhysics {
   activeBodies = 0;
-  addDynamic() {
+  sleepingStates: boolean[] = [];
+  addDynamic(_mesh: THREE.Object3D, _shape: unknown, _mass: number, startSleeping = false) {
     this.activeBodies++;
+    this.sleepingStates.push(startSleeping);
     return { isSleeping: () => false, applyImpulse: () => undefined };
   }
   removeBody() { this.activeBodies--; }
@@ -20,6 +22,7 @@ describe("InstancedCrateTarget", () => {
     const scene = new THREE.Scene();
     const physics = new FakePhysics();
     const target = new InstancedCrateTarget(definition, scene, physics as unknown as PhysicsWorld);
+    expect(physics.sleepingStates).toEqual([true, true]);
     const internals = target as unknown as {
       mesh: THREE.InstancedMesh;
       runtimeList: Array<{ transform: THREE.Object3D }>;

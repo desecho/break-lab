@@ -30,7 +30,7 @@ export class PhysicsWorld {
     return new PhysicsWorld();
   }
 
-  addDynamic(mesh: THREE.Object3D, shape: PartShape, mass: number): RAPIER.RigidBody {
+  addDynamic(mesh: THREE.Object3D, shape: PartShape, mass: number, startSleeping = false): RAPIER.RigidBody {
     mesh.updateWorldMatrix(true, false);
     const position = new THREE.Vector3();
     const quaternion = new THREE.Quaternion();
@@ -42,7 +42,8 @@ export class PhysicsWorld {
         .setRotation(quaternion)
         .setLinearDamping(0.18)
         .setAngularDamping(0.24)
-        .setCanSleep(true),
+        .setCanSleep(true)
+        .setSleeping(startSleeping),
     );
     const collider = colliderFor(shape).setMass(Math.max(0.05, mass)).setRestitution(0.12).setFriction(0.7);
     this.world.createCollider(collider, body);

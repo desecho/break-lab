@@ -58,7 +58,7 @@ export class InstancedCrateTarget implements DestructionTarget {
       this.scene.add(transform);
       this.mesh.setMatrixAt(index, transform.matrix);
       this.mesh.setColorAt(index, new THREE.Color(part.color));
-      const body = this.physics.addDynamic(transform, part.shape, part.mass);
+      const body = this.physics.addDynamic(transform, part.shape, part.mass, true);
       const runtime = { definition: part, index, health: part.maxHealth, detached: false, transform, body };
       this.runtimes.set(part.id, runtime);
       this.runtimeList.push(runtime);
